@@ -1,40 +1,83 @@
-#chat-container {
-    border: 1px solid #ccc;
-    padding: 10px;
-    max-width: 400px;
-    margin-top: 20px;
-}
+body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #f2f6fa, #e3edf7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
 
-#chat-box {
-    height: 200px;
-    overflow-y: auto;
-    border: 1px solid #aaa;
-    padding: 5px;
-    margin-bottom: 10px;
-    background-color: #f9f9f9;
-}
+    .chat-container {
+      background: white;
+      width: 90%;
+      max-width: 600px;
+      height: 80vh;
+      display: flex;
+      flex-direction: column;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
 
-.chat-message {
-    padding: 5px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-}
+    .chat-box {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-.chat-message.user {
-    background-color: #d1e7dd;
-    text-align: right;
-}
+    .message {
+      padding: 10px 14px;
+      border-radius: 12px;
+      max-width: 80%;
+      line-height: 1.4;
+    }
 
-.chat-message.bot {
-    background-color: #f8d7da;
-    text-align: left;
-}
+    .user {
+      align-self: flex-end;
+      background: #0078ff;
+      color: white;
+    }
 
-#chat-input {
-    width: 70%;
-    padding: 5px;
-}
+    .bot {
+      align-self: flex-start;
+      background: #f1f1f1;
+    }
 
-#send-btn {
-    padding: 5px 10px;
+    .input-area {
+      display: flex;
+      border-top: 1px solid #ddd;
+    }
+
+    input {
+      flex: 1;
+      border: none;
+      padding: 15px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    button {
+      background: #0078ff;
+      color: white;
+      border: none;
+      padding: 0 20px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #005fcc;
+    }
+
+    h1 {
+      position: absolute;
+      top: 30px;
+      color: #333;
+    }
 }
