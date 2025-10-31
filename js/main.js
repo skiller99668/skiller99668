@@ -1,13 +1,35 @@
-// This runs on every page
-console.log("JS is loaded");
+// Chatbot mockup
+const chatBox = document.getElementById('chat-box');
+const chatInput = document.getElementById('chat-input');
+const sendBtn = document.getElementById('send-btn');
 
-// Page-specific code
-if (document.body.classList.contains('home-page')) {
-    const btn = document.getElementById('demoButton');
-    btn.addEventListener('click', () => alert("Hello from Home Page!"));
+// Function to append messages
+function appendMessage(sender, text) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('chat-message', sender);
+    messageDiv.textContent = text;
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight; // scroll to bottom
 }
 
-if (document.body.classList.contains('shop-page')) {
-    console.log("You are on the shop page");
-    // You could load products dynamically here
+// Mock chatbot response
+function getChatbotResponse(userMessage) {
+    // For now, just echo the message
+    return "Chatbot says: " + userMessage;
 }
+
+sendBtn.addEventListener('click', () => {
+    const userMessage = chatInput.value.trim();
+    if (!userMessage) return;
+
+    appendMessage('user', userMessage);
+    chatInput.value = '';
+
+    const botReply = getChatbotResponse(userMessage);
+    setTimeout(() => appendMessage('bot', botReply), 500); // simulate delay
+});
+
+// Optional: allow Enter key to send
+chatInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') sendBtn.click();
+});
