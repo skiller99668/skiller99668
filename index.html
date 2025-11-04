@@ -33,6 +33,29 @@
         <p>© 2025 My Website</p>
     </footer>
 
-    <script src="js/main.js"></script>
+    <div id="chat">
+  <div id="messages"></div>
+  <input id="input" placeholder="Type a message...">
+  <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+async function sendMessage() {
+  const input = document.getElementById('input');
+  const userMessage = input.value;
+  input.value = '';
+  document.getElementById('messages').innerHTML += `<p><b>You:</b> ${userMessage}</p>`;
+
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: userMessage })
+  });
+  const data = await res.json();
+
+  document.getElementById('messages').innerHTML += `<p><b>Bot:</b> ${data.reply}</p>`;
+}
+</script>
+
 </body>
 </html>
