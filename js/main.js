@@ -1,35 +1,47 @@
-// Chatbot mockup
-const chatBox = document.getElementById('chat-box');
-const chatInput = document.getElementById('chat-input');
-const sendBtn = document.getElementById('send-btn');
+import express from "express";
+import bodyParser from "body-parser";
+import OpenAI from "openai";
 
-// Function to append messages
-function appendMessage(sender, text) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('chat-message', sender);
-    messageDiv.textContent = text;
-    chatBox.appendChild(messageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight; // scroll to bottom
-}
+const app = express();
+app.use(bodyParser.json());
 
-// Mock chatbot response
-function getChatbotResponse(userMessage) {
-    // For now, just echo the message
-    return "Chatbot says: " + userMessage;
-}
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const ASSISTANT_ID = "asst_UGCeGw13kGKC0dfcJpjDnzas"; // your Assistant ID
 
-sendBtn.addEventListener('click', () => {
-    const userMessage = chatInput.value.trim();
-    if (!userMessage) return;
+app.post("/api/chat", async (req, res) => {
+  const { message } = req.body;
 
-    appendMessage('user', userMessage);
-    chatInput.value = '';
+  try {
+    // Create a new thread for each session (or reuse one if you want memory)
+    const thread = await client.beta.threads.create();
 
-    const botReply = getChatbotResponse(userMessage);
-    setTimeout(() => appendMessage('bot', botReply), 500); // simulate delay
+    // Add the user message to the thread
+    await client.beta.threads.messages.create(thread.id, {
+      role: "user",
+      content: message,
+    });
+
+    // Run the Assistant
+    const run = await client.beta.threads.runs.create(thread.id, {
+      assistant_id: ASSISTANT_ID,
+    });
+
+    // Wait for the run to complete
+    let runStatus;
+    do {
+      runStatus = await client.beta.threads.runs.retrieve(thread.id, run.id);
+      if (runStatus.status !== "completed") await new Promise(r => setTimeout(r, 1000));
+    } while (runStatus.status !== "completed");
+
+    // Get the Assistant’s response
+    const messages = await client.beta.threads.messages.list(thread.id);
+    const reply = messages.data[0].content[0].text.value;
+
+    res.json({ reply });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Something went wrong." });
+  }
 });
 
-// Optional: allow Enter key to send
-chatInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') sendBtn.click();
-});
+app.listen(3000, () => console.log("✅ Server running on port 3000"));
