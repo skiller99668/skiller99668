@@ -1,4 +1,4 @@
-## Hi there 👋
+## CollegeAIApp --> the tool for students to get into top universities.
 
 <!--
 **skiller99668/skiller99668** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
